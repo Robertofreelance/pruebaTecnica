@@ -5,7 +5,7 @@ export const CategorySearchProductController = async (
   req: Request,
   res: Response
 ) => {
-  const { categoria_id: CategoryID, pagina, tamañoDePagina } = req.body;
+  const { categoria_id: CategoryID, pagina, tamaño_pagina } = req.body;
 
   try {
     const categories = await prisma.categories.findUnique({
@@ -18,8 +18,8 @@ export const CategorySearchProductController = async (
         Description: true,
         Picture: true,
         products_categoriesToproducts_CategoryID: {
-          skip: pagina * tamañoDePagina,
-          take: tamañoDePagina,
+          skip: pagina * tamaño_pagina,
+          take: tamaño_pagina,
         },
       },
     });
