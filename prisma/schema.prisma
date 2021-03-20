@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  CategoryID                               Int        @id
+  CategoryName                             String?    @db.Text
+  Description                              String?    @db.Text
+  Picture                                  Bytes?     @db.Blob
+  products_categoriesToproducts_CategoryID products[] @relation("categoriesToproducts_CategoryID")
+  
+
+}
+
+model customercustomerdemo {
+  CustomerID           String                @id @db.VarChar(255)
+  CustomerTypeID       String?               @db.VarChar(255)
+  customers            customers             @relation(fields: [CustomerID], references: [CustomerID])
+  customerdemographics customerdemographics? @relation(fields: [CustomerTypeID], references: [CustomerTypeID])
+
+  @@index([CustomerTypeID], name: "CustomerTypeID")
+}
+
+model customerdemographics {
+  CustomerTypeID       String                 @id @db.VarChar(255)
+  CustomerDesc         String?                @db.Text
+  customercustomerdemo customercustomerdemo[]
+}
+
+model customers {
+  CustomerID           String                @id @db.VarChar(255)
+  CompanyName          String                @db.Text
+  ContactName          String                @db.Text
+  ContactTitle         String                @db.Text
+  Address              String                @db.Text
+  City                 String                @db.Text
+  Region               String                @db.Text
+  PostalCode           String                @db.Text
+  Country              String                @db.Text
+  Phone                String                @db.Text
+  Fax                  String                @db.Text
+  customercustomerdemo customercustomerdemo?
+  orders               orders[]
+}
+
+model employees {
+  EmployeeID          Int                  @id @default(autoincrement())
+  LastName            String?              @db.Text
+  FirstName           String?              @db.Text
+  Title               String?              @db.Text
+  TitleOfCourtesy     String?              @db.Text
+  BirthDate           DateTime?            @db.Date
+  HireDate            DateTime?            @db.Date
+  Address             String?              @db.Text
+  City                String?              @db.Text
+  Region              String?              @db.Text
+  PostalCode          String?              @db.Text
+  Country             String?              @db.Text
+  HomePhone           String?              @db.Text
+  Extension           String?              @db.Text
+  Photo               Bytes?               @db.Blob
+  Notes               String?              @db.Text
+  ReportsTo           Int?
+  PhotoPath           String?              @db.Text
+  employeeterritories employeeterritories?
+  orders              orders[]
+}
+
+model employeeterritories {
+  EmployeeID  Int          @id
+  TerritoryID String?      @db.VarChar(255)
+  employees   employees    @relation(fields: [EmployeeID], references: [EmployeeID])
+  territories territories? @relation(fields: [TerritoryID], references: [TerritoryID])
+
+  @@index([TerritoryID], name: "TerritoryID")
+}
+
+model orderdetails {
+  OrderID   Int       @id
+  ProductID Int?
+  UnitPrice Decimal?  @db.Decimal(10, 0)
+  Quantity  Int?
+  Discount  Float?
+  orders    orders    @relation(fields: [OrderID], references: [OrderID])
+  products  products? @relation(fields: [ProductID], references: [ProductID])
+
+  @@index([ProductID], name: "ProductID")
+}
+
+model orders {
+  OrderID        Int           @id @default(autoincrement())
+  CustomerID     String        @db.VarChar(255)
+  EmployeeID     Int?
+  OrderDate      DateTime?     @db.Date
+  RequiredDate   DateTime?     @db.Date
+  ShippedDate    DateTime?     @db.Date
+  ShipVia        Int?
+  Freight        Decimal?      @db.Decimal(10, 0)
+  ShipName       String?       @db.Text
+  ShipAddress    String?       @db.Text
+  ShipCity       String?       @db.Text
+  ShipRegion     String?       @db.Text
+  ShipPostalCode String?       @db.Text
+  ShipCountry    String?       @db.Text
+  customers      customers     @relation(fields: [CustomerID], references: [CustomerID])
+  employees      employees?    @relation(fields: [EmployeeID], references: [EmployeeID])
+  shippers       shippers?     @relation(fields: [ShipVia], references: [ShipperID])
+  orderdetails   orderdetails?
+
+  @@index([EmployeeID], name: "EmployeeID")
+  @@index([ShipVia], name: "ShipVia")
+  @@index([CustomerID], name: "orders_ibfk_3")
+}
+
+model products {
+  ProductID       Int            @id @default(autoincrement())
+  ProductName     String?        @db.Text
+  SupplierID      Int?
+  CategoryID      Int?
+  QuantityPerUnit String?        @db.Text
+  UnitPrice       Decimal?       @db.Decimal(10, 0)
+  UnitsInStock    Int?
+  UnitsOnOrder    Int?
+  ReorderLevel    Int?
+  Discontinued    String?        @db.Text
+  category        categories?    @relation("categoriesToproducts_CategoryID", fields: [CategoryID], references: [CategoryID])
+  supplier        suppliers?     @relation(fields: [SupplierID], references: [SupplierID])
+  orderdetails    orderdetails[]
+
+  @@index([CategoryID], name: "CategoryID")
+  @@index([SupplierID], name: "SupplierID")
+}
+
+model regions {
+  RegionID          Int           @id
+  RegionDescription String?       @db.Text
+  territories       territories[]
+}
+
+model shippers {
+  ShipperID   Int      @id @default(autoincrement())
+  CompanyName String?  @db.Text
+  Phone       String?  @db.Text
+  orders      orders[]
+}
+
+model suppliers {
+  SupplierID   Int        @id @default(autoincrement())
+  CompanyName  String?    @db.Text
+  ContactName  String?    @db.Text
+  ContactTitle String?    @db.Text
+  Address      String?    @db.Text
+  City         String?    @db.Text
+  Region       String?    @db.Text
+  PostalCode   String?    @db.Text
+  Country      String?    @db.Text
+  Phone        String?    @db.Text
+  Fax          String?    @db.Text
+  HomePage     String?    @db.Text
+  products     products[]
+}
+
+model territories {
+  TerritoryID          String                @id @db.VarChar(255)
+  TerritoryDescription String?               @db.Text
+  RegionID             Int?
+  regions              regions?              @relation(fields: [RegionID], references: [RegionID])
+  employeeterritories  employeeterritories[]
+
+  @@index([RegionID], name: "RegionID")
+}
