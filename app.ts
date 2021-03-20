@@ -51,7 +51,7 @@ app.get(
 );
 
 app.get(
-  "/api/providers/products",
+  "/api/providers/id/products",
   validateIdProvider,
   checkForErrors,
   ProviderGetProductsByIdOrNameController
