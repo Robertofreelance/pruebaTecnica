@@ -13,8 +13,6 @@ model categories {
   Description                              String?    @db.Text
   Picture                                  Bytes?     @db.Blob
   products_categoriesToproducts_CategoryID products[] @relation("categoriesToproducts_CategoryID")
-  
-
 }
 
 model customercustomerdemo {
@@ -132,8 +130,8 @@ model products {
   supplier        suppliers?     @relation(fields: [SupplierID], references: [SupplierID])
   orderdetails    orderdetails[]
 
-  @@index([CategoryID], name: "CategoryID")
   @@index([SupplierID], name: "SupplierID")
+  @@index([CategoryID], name: "products_ibfk_2")
 }
 
 model regions {
