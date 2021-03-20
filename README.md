@@ -21,3 +21,5 @@ Otro detalle bien podria ser que use el sistema de Modelo-Controlador pero sin e
 Ya como detalle final las validaciones aunque bien pude hacerlas manuales ya que estaba corto de tiempo preferi usar el express-validator
 
 Para entrar al team de postman entrar en este link: https://app.getpostman.com/join-team?invite_code=890a355e2ff20ad3dcf07e5f0cd3b672
+
+El proyecto se encuentra alojado en este link: https://pruebatecnica-nodejs.herokuapp.com/
